@@ -18,12 +18,13 @@
   <li>ارائه یک رابط ساده و یکپارچه به مشتری.</li>
 </ul>
 
-<h4>نمونه کد</h4>
+<h3>نمونه کد</h3>
+
 ```java
-public class ParseFacade {
+public class ParserFacade {
     private Parser parser;
 
-    public ParseFacade() {
+    public ParserFacade() {
         parser = new Parser();
     }
 
