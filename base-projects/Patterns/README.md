@@ -19,7 +19,8 @@
 </ul>
 
 <h4>نمونه کد</h4>
-<pre><code>public class ParseFacade {
+```java
+public class ParseFacade {
     private Parser parser;
 
     public ParseFacade() {
@@ -34,7 +35,8 @@
             ErrorHandler.printError(e.getMessage());
         }
     }
-}</code></pre>
+}
+```
 
 <h3>مزایای کلیدی الگوی Facade</h3>
 <ul>
