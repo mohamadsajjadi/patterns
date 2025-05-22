@@ -1,4 +1,3 @@
-<div dir="rtl">
 
 # آزمایش شماره V (بازآرایی) - اعمال الگوی Facade
 
@@ -34,4 +33,3 @@ public class ParseFacade {
 }
 
 ```
-</div>
