@@ -1,34 +1,37 @@
-# MiniJava
-Mini-Java is a subset of Java. MiniJava compiler implement a compiler for the Mini-java
-programming language.
+<div dir="rtl">
 
-# Rules of MiniJava
+# آزمایش شماره V (بازآرایی) - اعمال الگوی Facade
+
+## هدف
+ساده‌سازی فرآیند راه‌اندازی و تعامل با کامپونت‌های پیچیده در سیستم‌های تجزیه‌گر (Parser) با استفاده از الگوی Facade.
+
+## مشکل
+- تعامل مستقیم با چندین کامپونت مانند `CodeGenerator`، `ParseTable` و `Rule` نیازمند راه‌اندازی و مدیریت جداگانه است.
+- این رویکرد باعث پیچیدگی کد مشتری، وابستگی زیاد به جزئیات داخلی، و کاهش خوانایی و قابلیت نگهداری می‌شود.
+
+## راه‌حل
+ایجاد کلاس `ParserFacade` برای:
+- پنهان کردن پیچیدگی‌های راه‌اندازی کامپونت‌ها.
+- ارائه یک رابط ساده و یکپارچه به مشتری.
+
+### نمونه کد
+```java
+public class ParseFacade {
+    private Parser parser;
+
+    public ParseFacade() {
+        parser = new Parser();
+    }
+
+    public void parseFile(String filePath) {
+        try {
+            Scanner sc = new Scanner(new File(filePath));
+            parser.startParse(sc);
+        } catch (FileNotFoundException e) {
+            ErrorHandler.printError(e.getMessage());
+        }
+    }
+}
+
 ```
-Goal --> Source EOF
-Source --> ClassDeclarations MainClass
-MainClass --> class Identifier { public static void main() { VarDeclarations Statements}}
-ClassDeclarations --> ClassDeclaration ClassDeclarations | lambda
-ClassDeclaration --> class Identifier Extension { FieldDeclarations MethodDeclarations }
-Extension --> extends Identifier | lambda
-FieldDeclarations --> FieldDeclaration FieldDeclarations | lambda
-FieldDeclaration --> static Type Identifier ;
-VarDeclarations --> VarDeclaration VarDeclarations | lambda
-VarDeclaration --> Type Identifier ;
-MethodDeclarations --> MethodDeclaration MethodDeclarations | lambda
-MethodDeclaration --> public static Type Identifier ( Parameters ) { VarDeclarations Statements return GenExpression ; }
-Parameters --> Type Identifier Parameter | lambda
-Parameter --> , Type Identifier Parameter | lambda
-Type --> boolean | int
-Statements --> Statements Statement | lambda
-Statement --> { Statements } | if ( GenExpression ) Statement else Statement | while ( GenExpression ) Statement | System.out.println ( GenExpression ) ; | Identifier = GenExpression ;
-GenExpression --> Expression | RelExpression
-Expression --> Expression + Term | Expression - Term | Term
-Term --> Term * Factor | Factor
-Factor --> ( Expression ) | Identifier | Identifier . Identifier | Identifier . Identifier ( Arguments ) | true | false | Integer
-RelExpression --> RelExpression && RelTerm | RelTerm
-RelTerm --> Expression == Expression | Expression < Expression
-Arguments --> GenExpression Argument | lambda
-Argument --> , GenExpression Argument | lambda
-Identifier --> <IDENTIFIER_LITERAL>
-Integer --> <INTEGER_LITERAL>
-```
+</div>
