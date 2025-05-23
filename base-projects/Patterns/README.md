@@ -422,4 +422,60 @@ public void addMethod(String methodName, int address, SymbolType returnType) {
 }
 ```
 کدهای مربوط به این بخش با کامیت های قبلی تداخل پیدا کرده.
+
+# ترکیب متدها (Composing Methods)
+
+## مقدمه
+الگوی ترکیب متدها زمانی استفاده می‌شود که بخواهیم متدهای کوچک و مجزای برنامه را به یک متد بزرگ‌تر و جامع‌تر ترکیب کنیم. این کار باعث کاهش تکرار کد و بهبود خوانایی آن می‌شود.
+
+## نحوه عملکرد
+در این الگو، متدهای کوچک که وظایف مشابهی دارند و در چندین قسمت از کد فراخوانی می‌شوند، به یک متد جدید ترکیب می‌شوند. این ترکیب می‌تواند به کاهش تکرار و بهبود عملکرد برنامه کمک کند.
+
+## مزایای استفاده از ترکیب متدها
+- **کاهش تکرار کد:**  
+  با ترکیب متدهای مشابه و تکراری به یک متد، از نوشتن کدهای مشابه در بخش‌های مختلف جلوگیری می‌شود.
+
+- **ساد‌ه‌سازی کد:**  
+  ترکیب متدها باعث می‌شود کد ساده‌تر و خواناتر باشد، زیرا تکرار و پیچیدگی‌های اضافی از بین می‌روند.
+
+- **افزایش قابلیت نگهداری:**  
+  زمانی که متدهای مشابه در یک مکان تجمع پیدا کنند، مدیریت و نگهداری آن‌ها ساده‌تر می‌شود.
+
+## در کد پروژه
+ما در پروژه Split Temporary Variable کردیم؛ متوجه شدیم که از یک متغیر موقت برای نگهداری مقادیر مختلف در نقاط مختلف استفاده می‌شود. آن را به دو متغیر تقسیم کردیم. این زمان مفید است که از یک متغیر برای اهداف متعدد استفاده می‌شود و دنبال کردن کد را سخت‌تر می‌کند.
+
+```java
+public Symbol get(String className, String methodName, String variable) {
+        Symbol res = klasses.get(className).Methodes.get(methodName).getVariable(variable);
+        if (res == null) res = get(variable, className);
+        return res;
+    }
+```
+به این کد تبدیل کردیم
+```java
+public Symbol get(String className, String methodName, String variable) {
+        Symbol firstRes = klasses.get(className).Methodes.get(methodName).getVariable(variable);
+        Symbol secondRes = firstRes == null ? get(variable, className) : firstRes;
+        return secondRes;
+    }
+```
+
+همچنین Temp را با Query جایگزین کردیم:
+اگر از یک متغیر موقت برای ذخیره مقداری استفاده شود که بتوان آن را مستقیماً توسط یک متد محاسبه کرد، می‌توانیم متغیر temp را با یک فراخوانی متد جایگزین کنیم. این باعث می‌شود کد مستقیم‌تر و شفاف‌تر شود.
+برای این کار، کد زیر را:
+```java
+public void setSuperClass(String superClass, String className) {
+        Klass superclass = klasses.get(superClass);
+        if (superclass != null) {
+            klasses.get(className).setSuperClass(superclass);
+        }
+}
+```
+به دلیل استفاده تک باره از supperclass به کد زیر تبدیل کردیم:
+```java
+public void setSuperClass(String superClass, String className) {
+        klasses.get(className).superClass = klasses.get(superClass);
+    }
+```
+
 </div>
