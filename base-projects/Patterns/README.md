@@ -246,4 +246,74 @@ public class SymbolTableFacade {
 
 استفاده از الگوی استراتژی (یا پلی‌مورفیسم به جای شرط‌ها) باعث شده که کد ما از بلوک‌های شرطی پیچیده پاک شود و به یک ساختار ساده‌تر و قابل توسعه تبدیل شود. این تغییر باعث افزایش خوانایی، قابلیت نگهداری و انعطاف‌پذیری سیستم می‌شود و همچنین امکان افزودن ویژگی‌های جدید بدون تغییر در ساختار موجود را فراهم می‌کند.
 
+
+
+# جداسازی پرسش از تغییرات (Separate Query from Modifier)
+
+## مقدمه
+الگوی جداسازی پرسش از تغییرات به معنای جدا کردن عملیات تغییر وضعیت یک شی از عملیات فقط خواندن اطلاعات آن است. این الگو باعث کد واضح‌تر و تمیزتر و جلوگیری از رفتار غیرمنتظره در برنامه می‌شود.
+
+## نحوه عملکرد
+1. **عملکرد پرسش (Query):**  
+   متدهایی که فقط اطلاعات را بدون تغییر وضعیت برمی‌گردانند. این متدها معمولاً مقدار فیلدها یا ویژگی‌های شی را بدون هیچ تغییر یا تأثیر بازمی‌گردانند.
+
+2. **عملکرد تغییر (Modifier):**  
+   متدهایی که وضعیت شی را تغییر می‌دهند و ممکن است ویژگی‌های آن را به‌روزرسانی یا عملیات دیگر روی داده‌ها انجام دهند.
+
+3. **جدا کردن دو نوع متد:**  
+   متدهای پرسش از متدهای تغییر در وضعیت شی جدا می‌شوند تا از بروز اشتباهات ناشی از تغییر وضعیت در حین پرسش جلوگیری شود.
+
+## مزایای این Refactoring
+1. **کاهش اشتباهات:**  
+   با جدا کردن پرسش از تغییرات، احتمال بروز اشتباهات تصادفی در تغییر وضعیت کمتر می‌شود.
+
+2. **کد تمیزتر و قابل خواندن‌تر:**  
+   متدهای پرسش و تغییر وضعیت واضح و متمایز بوده و هرکدام وظایف خاص خود را دارند که فهم کد را ساده‌تر می‌کند.
+
+3. **سادگی تست‌ها:**  
+   تست واحد (unit tests) برای پرسش و تغییر جداگانه و ساده‌تر می‌شود.
+
+4. **افزایش انعطاف‌پذیری:**  
+   سیستم انعطاف‌پذیرتر شده و تغییر وضعیت بدون تأثیر منفی بر بخش‌های دیگر کد قابل انجام است.
+
+
+ما این بخش را در کد:
+```java
+‍‍‍public void semanticFunction(int func, Token next) {
+        SemanticAction action = semanticActionsMap.get(func);
+        if (action != null) {
+            action.execute(this, next);
+        } else {
+            throw new IllegalArgumentException("Undefined semantic action: " + func);
+        }
+    }
+```
+
+به query و modifier تقسیم کردیم:
+
+```java
+‍‍‍public void performSemanticAction(int func, Token next) {
+        if (isActionDefined(func)) {
+            SemanticAction action = getSemanticAction(func);
+            action.execute(this, next);
+        } else {
+            throw new IllegalArgumentException("Undefined semantic action: " + func);
+        }
+    }
+```
+```java
+‍‍‍public void printMemory() {
+        memory.pintCodeBlock();
+    }
+```
+```java
+public boolean isActionDefined(int func) {
+    return semanticActionsMap.containsKey(func);
+}
+
+public SemanticAction getSemanticAction(int func) {
+    return semanticActionsMap.get(func);
+    }
+```
+
 </div>
