@@ -177,4 +177,73 @@ public class SymbolTableFacade {
 - **کارکرد سیستم مثل قبل، اما با رابط ساده‌تر.**  
 - **کد تمیزتر و نگهداری آسان‌تر.**  
 
+****
+الگوی استراتژی (State/Strategy Pattern) یا پلی‌مورفیسم به جای شرط‌ها برای حذف دستورات شرطی پیچیده مانند if-else یا switch استفاده می‌شود. هدف این الگو، نگهداری بهتر و تمیزتر کد است.
+
+نحوه عملکرد:
+
+1. تعریف رابط استراتژی (Strategy Interface) با یک رفتار مشترک به نام execute برای اعمال معنایی.
+2. ایجاد کلاس‌های استراتژی (Concrete Strategy Classes) که هر کدام یک نوع عملیات معنایی را پیاده‌سازی می‌کنند.
+3. نگهداری نقشه‌ای از کدها در کلاس CodeGenerator که هر کد به یک عمل معنایی خاص ارجاع دارد.
+4. استفاده از استراتژی‌ها: در متد semanticFunction به‌صورت خودکار عمل معنایی مرتبط پیدا و اجرا می‌شود.
+
+این روش باعث خواناتر شدن و قابل نگهداری‌تر شدن کد می‌شود.
+
+```java
+‍‍‍public interface SemanticAction {
+    void execute(CodeGenerator context, Token next);
+}
+```
+```java
+‍‍‍public class PrintAction implements SemanticAction {
+    @Override
+    public void execute(CodeGenerator context, Token next) {
+        context.print();
+    }
+}
+```
+```java
+‍‍‍public class SubAction implements SemanticAction {
+    @Override
+    public void execute(CodeGenerator context, Token next) {
+        context.sub();
+    }
+}
+```
+```java
+‍‍‍public class AssignAction implements SemanticAction {
+    @Override
+    public void execute(CodeGenerator context, Token next) {
+        context.assign();
+    }
+}
+```
+```java
+‍‍‍public class AddAction implements SemanticAction {
+    @Override
+    public void execute(CodeGenerator context, Token next) {
+        context.add();
+    }
+}
+```
+### مزایای این Refactoring
+
+- **حذف بلوک‌های شرطی بزرگ:** 
+   دستورات شرطی (مانند `switch` یا `if-else`) که باعث پیچیدگی کد می‌شدند با یک الگوی استراتژی ساده و قابل توسعه جایگزین شده است.
+
+- **اصل باز/بسته (Open/Closed Principle):** 
+   در این روش، افزودن اعمال معنایی جدید فقط به ایجاد کلاس جدید و افزودن آن به نقشه نیاز دارد. بدون نیاز به تغییرات در کدهای موجود، می‌توان به راحتی عملکردهای جدیدی به سیستم اضافه کرد.
+
+- **افزایش خوانایی کد:** 
+   هر عمل معنایی در کلاس خود محصور می‌شود و این باعث می‌شود کد به‌راحتی قابل فهم‌تر و سازمان‌دهی‌شده‌تر باشد.
+
+- **قابلیت استفاده مجدد:** 
+   کلاس‌های استراتژی می‌توانند در بخش‌های مختلف سیستم مورد استفاده قرار بگیرند، بدون اینکه نیاز به کپی‌کردن کد باشد.
+
+- **نگهداری و گسترش آسان‌تر:** 
+   تغییرات در نحوه پیاده‌سازی هر عمل معنایی به راحتی در کلاس استراتژی مربوطه انجام می‌شود. این تغییرات تأثیری در سایر بخش‌های کد نخواهند داشت و نگهداری سیستم ساده‌تر می‌شود.
+### نتیجه‌گیری
+
+استفاده از الگوی استراتژی (یا پلی‌مورفیسم به جای شرط‌ها) باعث شده که کد ما از بلوک‌های شرطی پیچیده پاک شود و به یک ساختار ساده‌تر و قابل توسعه تبدیل شود. این تغییر باعث افزایش خوانایی، قابلیت نگهداری و انعطاف‌پذیری سیستم می‌شود و همچنین امکان افزودن ویژگی‌های جدید بدون تغییر در ساختار موجود را فراهم می‌کند.
+
 </div>
