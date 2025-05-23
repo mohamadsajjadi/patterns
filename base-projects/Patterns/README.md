@@ -1,34 +1,59 @@
-# MiniJava
-Mini-Java is a subset of Java. MiniJava compiler implement a compiler for the Mini-java
-programming language.
+<div dir="rtl">
 
-# Rules of MiniJava
+<h2>آزمایش شماره V (بازآرایی) - اعمال الگوی Facade</h2>
+
+<h3>هدف</h3>
+<p>ساده‌سازی فرآیند راه‌اندازی و تعامل با کامپونت‌های پیچیده در سیستم‌های تجزیه‌گر (Parser) با استفاده از الگوی Facade.</p>
+
+<h3>مشکل</h3>
+<ul>
+  <li>تعامل مستقیم با چندین کامپونت مانند <code>CodeGenerator</code>، <code>ParseTable</code> و <code>Rule</code> نیازمند راه‌اندازی و مدیریت جداگانه است.</li>
+  <li>این رویکرد باعث پیچیدگی کد مشتری، وابستگی زیاد به جزئیات داخلی، و کاهش خوانایی و قابلیت نگهداری می‌شود.</li>
+</ul>
+
+<h3>راه‌حل</h3>
+<p>ایجاد کلاس <code>ParserFacade</code> برای:</p>
+<ul>
+  <li>پنهان کردن پیچیدگی‌های راه‌اندازی کامپونت‌ها.</li>
+  <li>ارائه یک رابط ساده و یکپارچه به مشتری.</li>
+</ul>
+
+<h3>نمونه کد</h3>
+
+```java
+public class ParserFacade {
+    private Parser parser;
+
+    public ParserFacade() {
+        parser = new Parser();
+    }
+
+    public void parseFile(String filePath) {
+        try {
+            Scanner sc = new Scanner(new File(filePath));
+            parser.startParse(sc);
+        } catch (FileNotFoundException e) {
+            ErrorHandler.printError(e.getMessage());
+        }
+    }
+}
 ```
-Goal --> Source EOF
-Source --> ClassDeclarations MainClass
-MainClass --> class Identifier { public static void main() { VarDeclarations Statements}}
-ClassDeclarations --> ClassDeclaration ClassDeclarations | lambda
-ClassDeclaration --> class Identifier Extension { FieldDeclarations MethodDeclarations }
-Extension --> extends Identifier | lambda
-FieldDeclarations --> FieldDeclaration FieldDeclarations | lambda
-FieldDeclaration --> static Type Identifier ;
-VarDeclarations --> VarDeclaration VarDeclarations | lambda
-VarDeclaration --> Type Identifier ;
-MethodDeclarations --> MethodDeclaration MethodDeclarations | lambda
-MethodDeclaration --> public static Type Identifier ( Parameters ) { VarDeclarations Statements return GenExpression ; }
-Parameters --> Type Identifier Parameter | lambda
-Parameter --> , Type Identifier Parameter | lambda
-Type --> boolean | int
-Statements --> Statements Statement | lambda
-Statement --> { Statements } | if ( GenExpression ) Statement else Statement | while ( GenExpression ) Statement | System.out.println ( GenExpression ) ; | Identifier = GenExpression ;
-GenExpression --> Expression | RelExpression
-Expression --> Expression + Term | Expression - Term | Term
-Term --> Term * Factor | Factor
-Factor --> ( Expression ) | Identifier | Identifier . Identifier | Identifier . Identifier ( Arguments ) | true | false | Integer
-RelExpression --> RelExpression && RelTerm | RelTerm
-RelTerm --> Expression == Expression | Expression < Expression
-Arguments --> GenExpression Argument | lambda
-Argument --> , GenExpression Argument | lambda
-Identifier --> <IDENTIFIER_LITERAL>
-Integer --> <INTEGER_LITERAL>
-```
+
+<h3>مزایای کلیدی الگوی Facade</h3>
+<ul>
+  <li><strong>ساده‌سازی کد مشتری:</strong> مشتری تنها با <code>ParserFacade</code> تعامل دارد و نیازی به مدیریت جزئیات داخلی کامپونت‌ها ندارد.</li>
+  <li><strong>کاهش وابستگی‌ها:</strong> تغییرات در کامپونت‌های داخلی (مانند <code>CodeGenerator</code> یا <code>ParseTable</code>) تأثیر کمتری بر کد مشتری می‌گذارد.</li>
+  <li><strong>افزایش خوانایی:</strong> رابط تمیز و سطح بالا، کد را برای توسعه‌دهندگان قابل‌درک‌تر و قابل‌نگهداری می‌کند.</li>
+  <li><strong>نگهداری آسان‌تر:</strong> تغییرات در منطق راه‌اندازی تنها در کلاس <code>ParserFacade</code> اعمال می‌شوند و نیازی به اصلاح کد مشتری نیست.</li>
+</ul>
+
+با استفاده از الگوی Facade، ما موفق شدیم کد مشتری را برای راه‌اندازی و تعامل با `Parser` ساده کنیم. حالا مشتری تنها باید با یک کلاس ساده (`ParserFacade`) تعامل کند و پیچیدگی‌های راه‌اندازی کامپوننت‌ها از طریق این رابط یکپارچه پنهان شده است. این باعث می‌شود کد آسان‌تر نگهداری، گسترش و استفاده شود.
+
+<h3>نتیجه‌گیری نهایی</h3>
+<ul>
+  <li>✅ پیچیدگی‌های سیستم به‌طور مؤثر مدیریت شد.</li>
+  <li>✅ کد مشتری ساده‌تر و با قابلیت نگهداری بالاتر طراحی شد.</li>
+  <li>✅ قابلیت توسعه و انعطاف‌پذیری سیستم بهبود یافت.</li>
+</ul>
+
+</div>
