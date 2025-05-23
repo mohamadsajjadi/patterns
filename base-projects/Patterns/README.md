@@ -316,4 +316,72 @@ public SemanticAction getSemanticAction(int func) {
     }
 ```
 
+# فیلد محصور شده (Self Encapsulated Field)
+
+## مقدمه
+الگوی Self Encapsulated Field یکی از تکنیک‌های Refactoring است که به جای دسترسی مستقیم به فیلدهای کلاس، دسترسی از طریق متدهای getter و setter انجام می‌شود تا کنترل بیشتر و انعطاف‌پذیری بهتری روی داده‌های کلاس فراهم شود.
+
+## نحوه عملکرد
+1. **دسترسی به فیلدها از طریق متدها:**  
+   به جای استفاده مستقیم از فیلدها، دسترسی به آنها از طریق متدهای getter و setter انجام می‌شود و فیلدها به صورت محصور در کلاس باقی می‌مانند.
+
+2. **محدود کردن دسترسی به فیلدها:**  
+   متدهای getter و setter می‌توانند شامل منطق اضافی برای اعتبارسنجی و کنترل تغییرات باشند؛ مثلاً قبل از اعمال تغییرات داده‌ها را بررسی کنند.
+
+3. **ساده‌سازی تغییرات در آینده:**  
+   وقتی به فیلدها از طریق متدها دسترسی می‌شود، می‌توان بدون تغییر سایر بخش‌های کد، نحوه دسترسی یا نوع داده فیلد را تغییر داد.
+
+## مزایای این Refactoring
+1. **کنترل بیشتر:**  
+   با استفاده از getter و setter، کنترل بهتری روی نحوه دسترسی و تغییر داده‌ها وجود دارد و تغییرات کنترل‌شده‌تر انجام می‌شود.
+
+2. **افزایش انعطاف‌پذیری:**  
+   امکان افزودن منطق خاص در زمان دریافت یا تغییر مقدار فیلدها فراهم می‌شود، بدون نیاز به تغییر در سایر بخش‌های کد.
+
+3. **افزایش خوانایی و نگهداری آسان‌تر:**  
+   کد واضح‌تر و تمیزتر شده و نگهداری و توسعه آن آسان‌تر می‌گردد.
+
+4. **حفاظت از داده‌ها:**  
+   فیلدهایی که به‌طور مستقیم قابل دسترسی نیستند، از تغییرات نادرست محافظت می‌شوند و فقط تغییرات معتبر و منطقی روی داده‌ها اعمال می‌شود.
+
+```java
+public class Symbol {
+
+    // Private fields to ensure encapsulation
+    private SymbolType type;
+    private int address;
+
+    // Constructor to initialize the fields
+    public Symbol(SymbolType type, int address) {
+        this.type = type;
+        this.address = address;
+    }
+
+    // Getter for type
+    public SymbolType getType() {
+        return type;
+    }
+
+    // Setter for type
+    public void setType(SymbolType type) {
+        // Optionally, you could add validation here to control how the type is set
+        this.type = type;
+    }
+
+    // Getter for address
+    public int getAddress() {
+        return address;
+    }
+
+    // Setter for address
+    public void setAddress(int address) {
+        // Optionally, you could add validation to ensure a valid address is set
+        this.address = address;
+    }
+}
+```
+
+**نتیجه‌گیری**
+
+الگوی Self Encapsulated Field به شما این امکان را می‌دهد که دسترسی به فیلدهای کلاس را از طریق متدهای خاص و کنترل‌شده مدیریت کنید. این امر باعث می‌شود که تغییرات در نحوه دسترسی به داده‌ها ساده‌تر شود، کد خواناتر و نگهداری آن آسان‌تر گردد. در کل، این تکنیک به‌ویژه در پروژه‌های بزرگ و پیچیده می‌تواند به بهبود کیفیت کد و انعطاف‌پذیری آن کمک کند.
 </div>
